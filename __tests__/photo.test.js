@@ -13,7 +13,7 @@ const dataPhoto = {
   title: "test title",
   caption: "test caption",
   image_url: "https://goggle.com",
-  UserId: 11,  
+  UserId: 1,
 };
 
 //test untuk API create photo
@@ -138,7 +138,13 @@ describe("GET /photos/:id", () => {
   beforeAll(async () => {
     try {
       await User.create(dataUser);
-      await Photo.create(dataPhoto);
+      await Photo.create({
+        id: 1,
+        title: "test title",
+        caption: "test caption",
+        image_url: "https://goggle.com",
+        UserId: 1,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -156,7 +162,7 @@ describe("GET /photos/:id", () => {
 
         const token = res.body.token;
         request(app)
-          .get("/photos/7")
+          .get("/photos/1")
           .set("authorization", token)
           //execute
           .expect(200)
