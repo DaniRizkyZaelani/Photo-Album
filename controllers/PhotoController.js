@@ -8,7 +8,7 @@ class PhotoController {
       });
       res.status(200).json(data);
     } catch (err) {
-      res.staus(500).json({ message: err.message });
+      res.status(500).json({ message: err.message });
     }
   }
 
@@ -29,7 +29,7 @@ class PhotoController {
       }
 
       res.status(200).json(data);
-      
+
     } catch (error) {
       res.status(error.code || 500).json(error.message);
     }
@@ -39,7 +39,12 @@ class PhotoController {
     try {
       const { title, caption, image_url } = req.body;
       const userData = req.userData;
-      const data = await Photo.create({ title, caption, image_url,UserId: userData.id });
+      const data = await Photo.create({
+        title,
+        caption,
+        image_url,
+        UserId: userData.id,
+      });
 
       res.status(201).json(data);
     } catch (error) {

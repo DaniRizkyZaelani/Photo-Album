@@ -4,18 +4,16 @@ const { User } = require("../models");
 const { Photo } = require("../models");
 
 const dataUser = {
-  id: 1,
   username: "admin",
   email: "admin@mail.com",
   password: "1234",
 };
 
 const dataPhoto = {
-  id: 1,
-  title: "Photo 1",
-  caption: "Caption photo 1",
-  image_url: "https://picsum.photos/id/1/200/300",
-  UserId: 1,
+  title: "test title",
+  caption: "test caption",
+  image_url: "https://goggle.com",
+  UserId: 11,  
 };
 
 //test untuk API create photo
@@ -51,11 +49,9 @@ describe("POST /photos", () => {
             expect(res.body).toHaveProperty("title");
             expect(res.body).toHaveProperty("caption");
             expect(res.body).toHaveProperty("image_url");
-            expect(res.body.title).toEqual("Photo 1");
-            expect(res.body.caption).toEqual("Caption photo 1");
-            expect(res.body.image_url).toEqual(
-              "https://picsum.photos/id/1/200/300"
-            );
+            expect(res.body.title).toEqual("test title");
+            expect(res.body.caption).toEqual("test caption");
+            expect(res.body.image_url).toEqual("https://goggle.com");
             done();
           });
       });
@@ -160,7 +156,7 @@ describe("GET /photos/:id", () => {
 
         const token = res.body.token;
         request(app)
-          .get("/photos/1")
+          .get("/photos/7")
           .set("authorization", token)
           //execute
           .expect(200)
@@ -195,12 +191,12 @@ describe("GET /photos/:id", () => {
       });
   });
 
-  //   afterAll(async () => {
-  //     try {
-  //       await User.destroy({ where: {} });
-  //       await Photo.destroy({ where: {} });
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   });
+    afterAll(async () => {
+      try {
+        await User.destroy({ where: {} });
+        await Photo.destroy({ where: {} });
+      } catch (err) {
+        console.log(err);
+      }
+    });
 });
