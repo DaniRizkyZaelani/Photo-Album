@@ -10,7 +10,7 @@ class UserController {
       });
       res.status(200).json(data);
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json(err);
     }
   }
 
@@ -29,7 +29,7 @@ class UserController {
         email: data.email,
       });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json(err);
     }
   }
 
@@ -38,7 +38,7 @@ class UserController {
       const { email, password } = req.body;
       const data = await User.findOne({
         where: {
-          email,
+          email: email
         },
       });
 
@@ -52,23 +52,22 @@ class UserController {
       //compare password
       const isValid = comparePassword(password, data.password);
       if (!isValid) {
-        console.log(isValid, "<<compare password");
-
         throw {
           code: 401,
           message: "Invalid password",
         };
       }
 
-      //generate password
+      //generate token
       const token = generateToken({
         id: data.id,
         email: data.email,
         username: data.username,
       });
-      res.status(200).json({ token });
+      res.status(200).json( {token} );
     } catch (error) {
-      res.status(error.code || 500).json(error.message);
+      // res.status(error.code || 500).json(error);
+      res.status(error.code || 500).json(error);
     }
   }
 }
