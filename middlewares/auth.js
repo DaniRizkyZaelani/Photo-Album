@@ -12,7 +12,7 @@ const authentication = async (req, res, next) => {
       };
     }
 
-    //verify token
+    //verify token    
     const decoded = verifyToken(token);
     const userData = await User.findOne({
       where: {
