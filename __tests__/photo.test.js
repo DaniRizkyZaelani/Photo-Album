@@ -3,27 +3,28 @@ const app = require("../app");
 const { User } = require("../models");
 const { Photo } = require("../models");
 
-// const dataUser = {
-//     username: "admin",
-//     email: "admin@mail.com",
-//     password: "1234",
-// };
+let user;
 
-// const dataPhoto = {
-//     title: "test title",
-//     caption: "test caption",
-//     image_url: "https://goggle.com",
-// };
+const dataUser = {
+    id: 1,
+    username: "admin",
+    email: "admin@mail.com",
+    password: "1234",
+};
+
+const dataPhoto = {
+    id: 1,
+    title: "test title",
+    caption: "test caption",
+    image_url: "https://goggle.com",
+};
 
 //test untuk API create photo
 describe("POST /photos", () => {
   beforeAll(async () => {
     try {
-      await User.create({
-        username: "admin",
-        email: "admin@mail.com",
-        password: "1234",
-      });
+      await User.create(dataUser);
+      await Photo.create(dataPhoto);
     } catch (err) {
       console.log(err);
     }
@@ -41,8 +42,8 @@ describe("POST /photos", () => {
     request(app)
       .post("/users/login")
       .send({
-        email: "admin@mail.com",
-        password: "1234",
+        email: dataUser.email,
+        password: dataUser.password,
       })
       //execute
       .expect(200)
@@ -54,9 +55,9 @@ describe("POST /photos", () => {
           .post("/photos")
           .set("authorization", token)
           .send({
-            title: "test title",
-            caption: "test caption",
-            image_url: "https://goggle.com",
+            title: dataPhoto.title,
+            caption: dataPhoto.caption,
+            image_url: dataPhoto.image_url,
           })
           //execute
           .expect(201)
@@ -80,9 +81,9 @@ describe("POST /photos", () => {
     request(app)
       .post("/photos")
       .send({
-        title: "test title",
-        caption: "test caption",
-        image_url: "https://goggle.com",
+        title: dataPhoto.title,
+        caption: dataPhoto.caption,
+        image_url: dataPhoto.image_url,
       })
       //execute
       .expect(401)
@@ -97,18 +98,12 @@ describe("POST /photos", () => {
 //test untuk API get all photos
 describe("GET /photos", () => {
   beforeAll(async () => {
+    let user;
     try {
-      const result = await User.create({
-        username: "admin",
-        email: "admin@mail.com",
-        password: "1234",
-      });
-      const photo = await Photo.create({
-        title: "test title",
-        caption: "test caption",
-        image_url: "https://goggle.com",
-        UserId: result.id,
-      });
+      const result = await User.create(dataUser);
+      const photo = await Photo.create(
+        { ...dataPhoto, UserId: result.id },
+      );
     } catch (err) {
       console.log(err);
     }
@@ -127,8 +122,8 @@ describe("GET /photos", () => {
     request(app)
       .post("/users/login")
       .send({
-        email: "admin@mail.com",
-        password: "1234",
+        email: dataUser.email,
+        password: dataUser.password,
       })
       //execute
       .expect(200)
@@ -180,19 +175,10 @@ describe("GET /photos", () => {
 describe("GET /photos/:id", () => {
   beforeAll(async () => {
     try {
-      const result = await User.create({
-        id: 1,
-        username: "admin",
-        email: "admin@mail.com",
-        password: "1234",
-      });
-      const photo = await Photo.create({
-        id: 1,
-        title: "test title",
-        caption: "test caption",
-        image_url: "https://goggle.com",
-        UserId: result.id,
-      });
+      const result = await User.create(dataUser);
+      const photo = await Photo.create(
+        { ...dataPhoto, UserId: result.id },
+      );
     } catch (error) {
       console.log(error);
     }
@@ -211,8 +197,8 @@ describe("GET /photos/:id", () => {
     request(app)
       .post("/users/login")
       .send({
-        email: "admin@mail.com",
-        password: "1234",
+        email: dataUser.email,
+        password: dataUser.password,
       })
       //execute
       .expect(200)
