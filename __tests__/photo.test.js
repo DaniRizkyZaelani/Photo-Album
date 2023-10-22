@@ -3,24 +3,35 @@ const app = require("../app");
 const { User } = require("../models");
 const { Photo } = require("../models");
 
-const dataUser = {
-  username: "admin",
-  email: "admin@mail.com",
-  password: "1234",
-};
+// const dataUser = {
+//     username: "admin",
+//     email: "admin@mail.com",
+//     password: "1234",
+// };
 
-const dataPhoto = {
-  title: "test title",
-  caption: "test caption",
-  image_url: "https://goggle.com",
-  UserId: 1,
-};
+// const dataPhoto = {
+//     title: "test title",
+//     caption: "test caption",
+//     image_url: "https://goggle.com",
+// };
 
 //test untuk API create photo
 describe("POST /photos", () => {
   beforeAll(async () => {
     try {
-      await User.create(dataUser);
+      await User.create({
+        username: "admin",
+        email: "admin@mail.com",
+        password: "1234",
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  afterAll(async () => {
+    try {
+      await User.destroy({ where: {} });
+      await Photo.destroy({ where: {} });
     } catch (err) {
       console.log(err);
     }
@@ -29,7 +40,10 @@ describe("POST /photos", () => {
     //setup
     request(app)
       .post("/users/login")
-      .send(dataUser)
+      .send({
+        email: "admin@mail.com",
+        password: "1234",
+      })
       //execute
       .expect(200)
       .end((err, res) => {
@@ -39,7 +53,11 @@ describe("POST /photos", () => {
         request(app)
           .post("/photos")
           .set("authorization", token)
-          .send(dataPhoto)
+          .send({
+            title: "test title",
+            caption: "test caption",
+            image_url: "https://goggle.com",
+          })
           //execute
           .expect(201)
           .end((err, res) => {
@@ -61,7 +79,11 @@ describe("POST /photos", () => {
     //setup
     request(app)
       .post("/photos")
-      .send(dataPhoto)
+      .send({
+        title: "test title",
+        caption: "test caption",
+        image_url: "https://goggle.com",
+      })
       //execute
       .expect(401)
       .end((err, res) => {
@@ -76,17 +98,38 @@ describe("POST /photos", () => {
 describe("GET /photos", () => {
   beforeAll(async () => {
     try {
-      await User.create(dataUser);
-      await Photo.create(dataPhoto);
+      const result = await User.create({
+        username: "admin",
+        email: "admin@mail.com",
+        password: "1234",
+      });
+      const photo = await Photo.create({
+        title: "test title",
+        caption: "test caption",
+        image_url: "https://goggle.com",
+        UserId: result.id,
+      });
     } catch (err) {
       console.log(err);
     }
   });
+  afterAll(async () => {
+    try {
+      await User.destroy({ where: {} });
+      await Photo.destroy({ where: {} });
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  
   it("should send response with 200", (done) => {
     //setup
     request(app)
       .post("/users/login")
-      .send(dataUser)
+      .send({
+        email: "admin@mail.com",
+        password: "1234",
+      })
       //execute
       .expect(200)
       .end((err, res) => {
@@ -137,16 +180,29 @@ describe("GET /photos", () => {
 describe("GET /photos/:id", () => {
   beforeAll(async () => {
     try {
-      await User.create(dataUser);
-      await Photo.create({
+      const result = await User.create({
+        id: 1,
+        username: "admin",
+        email: "admin@mail.com",
+        password: "1234",
+      });
+      const photo = await Photo.create({
         id: 1,
         title: "test title",
         caption: "test caption",
         image_url: "https://goggle.com",
-        UserId: 1,
+        UserId: result.id,
       });
     } catch (error) {
       console.log(error);
+    }
+  });
+  afterAll(async () => {
+    try {
+      await User.destroy({ where: {} });
+      await Photo.destroy({ where: {} });
+    } catch (err) {
+      console.log(err);
     }
   });
 
@@ -154,7 +210,10 @@ describe("GET /photos/:id", () => {
     //setup
     request(app)
       .post("/users/login")
-      .send(dataUser)
+      .send({
+        email: "admin@mail.com",
+        password: "1234",
+      })
       //execute
       .expect(200)
       .end((err, res) => {
@@ -196,13 +255,4 @@ describe("GET /photos/:id", () => {
         done();
       });
   });
-
-    afterAll(async () => {
-      try {
-        await User.destroy({ where: {} });
-        await Photo.destroy({ where: {} });
-      } catch (err) {
-        console.log(err);
-      }
-    });
 });
