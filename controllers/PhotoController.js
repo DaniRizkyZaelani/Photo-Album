@@ -16,7 +16,6 @@ class PhotoController {
     try {
       const { id } = req.params;
       const userData = req.userData;
-
       const data = await Photo.findOne({
         where: { id: id, UserId: userData.id },
       });

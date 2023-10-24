@@ -14,28 +14,28 @@ module.exports = {
     */
     await queryInterface.bulkInsert('Photos', [
       {
-        title: "Photo 1.1",
+        title: "Photo 100",
         caption: "Caption photo 1",
         image_url: "https://picsum.photos/id/1/200/300",
         createdAt: new Date(),
         updatedAt: new Date(),
-        UserId: 1
+        UserId: 4
       },
       {
-        title: "Photo 2.1",
+        title: "Photo 200",
         caption: "Caption photo 2",
         image_url: "https://picsum.photos/id/2/200/300",
         createdAt: new Date(),
         updatedAt: new Date(),
-        UserId: 1
+        UserId: 6
       },
       {
-        title: "Photo 3.1",
+        title: "Photo 3300",
         caption: "Caption photo 3",
         image_url: "https://picsum.photos/id/2/200/300",
         createdAt: new Date(),
         updatedAt: new Date(),
-        UserId: 1
+        UserId: 10
       }
      ], {})
     },

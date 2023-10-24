@@ -3,8 +3,6 @@ const app = require("../app");
 const { User } = require("../models");
 const { Photo } = require("../models");
 
-let user;
-
 const dataUser = {
     id: 1,
     username: "admin",
